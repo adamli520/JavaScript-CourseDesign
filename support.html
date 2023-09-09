@@ -1,0 +1,122 @@
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>技术支持</title>
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/alibaba-iconfont.css">
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		.box {
+
+			width: 1000px;
+			height: 700px;
+			margin: 10px auto;
+			border: 0px solid #ff6700;
+			background-color: black;
+			overflow: hidden;
+		}
+
+		img {
+			width: 150px;
+			height: 100px;
+			padding-right: 50px;
+			padding-bottom: 20px;
+
+		}
+
+		.animate {
+			padding-top: 400px;
+			padding-left: 200px;
+			font-size: 12px;
+			color: #000;
+			display: inline-block;
+			white-space: nowrap;
+			animation: 30s wordsLoop linear infinite normal;
+		}
+		@keyframes wordsLoop {
+			0% {
+				transform: translateY(250px);
+				-webkit-transform: translateY(250px);
+			}
+
+			100% {
+				transform: translateY(-100%);
+				-webkit-transform: translateY(-100%);
+			}
+		}
+
+		.animate:hover {
+
+			animation-play-state: paused;
+
+		}
+
+		button {
+			position: absolute;
+			right: 0px;
+			top: 400px;
+			margin: 0px auto;
+			width: 100px;
+			height: 50px;
+			border-radius: 5px;
+			cursor: pointer;
+			outline: none;
+		}
+
+		.btn-primary:hover {
+			background: #fb0000;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="box">
+		<p class="animate" style="color:yellow;font-size:30px;">
+			<!-- <img src="./flag.jpg"/>   -->
+			<span id='shower'>
+				<a href="https://lijun920.xyz/#" target="_blank">主站网盘:lijun920.xyz</a><br>
+				<a href="https://blog.lijun920.xyz/" target="_blank">博客:blog.lijun920.xyz</a><br>
+				感谢阿里巴巴图标库提供图标支持<br>
+				<br>
+				特别鸣谢/参考资料:<br>
+				<img src="img/github.png"><br>
+				<a href="https://github.com/itorr/sakana" target="_blank">https://github.com/itorr/sakana </a><br>
+				<a href="https://github.com/DIYgod/APlayer" target="_blank">https://github.com/DIYgod/APlayer</a><br>
+				<a href="https://github.com/flymysql/CET4-Mouse-click-effects"
+					target="_blank">https://github.com/flymysql/CET4-Mouse-click-effects</a><br>
+			</span>
+
+		</p>
+
+	</div>
+	<button class="btn-primary" type="button" onclick="home()">返回主页</button>
+	<!-- 页脚 -->
+	<footer class="footer text-danger bg-footer fixed-bottom text-center">
+		<div class="container">
+			<p>
+				版权所有<i class="iconfont icon-banquan" style="font-size:20px;"></i>AdamLi
+				<a href="http://wpa.qq.com/msgrd?v=3&uin=2822576659&site=qq&menu=yes" target="_blank">
+					联系QQ：<i class="iconfont icon-QQ" style="font-size: 20px;"></i> </a> <br>
+				<a href="https://beian.miit.gov.cn/" target="_blank"><i class="iconfont icon-ICPbeian"
+						style="font-size:25px;"></i>鄂ICP备2022010411号-3</a>
+
+			</p>
+		</div>
+	</footer>
+
+	<script>
+		function home() {
+
+			window.location.href = 'index.html';
+			alert("返回主页成功！");
+		}
+	</script>
+
+</body>
+
+</html>

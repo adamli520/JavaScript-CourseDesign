@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>游戏</title>
+	<link rel="shortcut icon" href="static/logo.png" type="image/x-icon">
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/cursor.css">
+	<link rel="stylesheet" href="css/alibaba-iconfont.css">
+	<link rel="stylesheet" href="css/index.css">
+	<script src="js/cet4.js"></script>
+	<link rel="stylesheet" href="css/sakana-widget.css" />
+	<script src="js/Mouse movement.js"></script>
+	<script>
+		function initSakanaWidget() {
+			new SakanaWidget().mount('#sakana-widget');
+		}
+	</script>
+	<script async onload="initSakanaWidget()" src="js/sakana-min.js"></script>
+	<!-- https://cdn.jsdelivr.net/npm/sakana-widget@2.4.1/lib/sakana.min.js -->
+	<!-- APlayer -->
+	<link rel="stylesheet" href="css/APlayer-min.css">
+	<script src="js/APlayer-min.js"></script>
+	<link rel="stylesheet" href="css/game.css">
+</head>
+
+<body>
+	<!-- 导航 -->
+
+	<nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top ">
+		<div class="container">
+			<h1 class="title">
+				<a class="navbar-brand" href="index.html">
+					<img src="static/logo.png" alt="logo" width="50" height="50">
+				</a>
+			</h1>
+			<!-- 折叠按钮 -->
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse " id="navbar">
+				<ul class="nav nav-pills ml-auto flex-column flex-lg-row">
+					<li class="nav-item"><a class="nav-link" href="index.html">首页</a></li>
+					<li class="nav-item"><a class="nav-link active" href="game.html">游戏商店</a></li>
+					<li class="nav-item"><a class="nav-link" href="https://blog.lijun920.xyz/" target="_blank">友链</a></li>
+					<li class="nav-item"><a class="nav-link" href="support.html">技术支持</a></li>
+
+				</ul>
+				<!-- 动态添加游戏 -->
+				<button class="btn btn-info ml-lg-auto" id="addGameBtn" type="button" data-bs-toggle="modal"
+					data-bs-target="#addGameModal">添加游戏</button>
+				<!-- 搜索栏 -->
+				<form action="" class="form-inline ml-lg-auto my-3 my-lg-0">
+					<input type="text" class="form-control  mr-sm-2" placeholder="直接回车也可搜索" id="searchInput">
+					<button class="btn btn-light my-2 my-sm-0" type="button" id="btn-search"><i
+							class="iconfont icon-sousuo1" aria-hidden="true"></i></button>
+				</form>
+				<!-- 购物车区域 -->
+
+				<button id="btn-shopcart" class="btn btn-light ml-lg-auto my-2 my-sm-0" type="button"
+					data-toggle="modal" data-target="#shoppingCartModal">
+					<i class="iconfont icon-gouwuche" aria-hidden="true"></i>
+				</button>
+				<span class="badge badge-pill badge-danger" id="shopcart-items">0</span>
+
+
+				<div class="btn-group ml-auto" role="group">
+					<button class="btn btn-primary mr-2" data-toggle="modal" data-target="#loginModal">登录</button>
+					<button class="btn btn-primary" data-toggle="modal" data-target="#registerModal">注册</button>
+				</div>
+			</div>
+		</div>
+	</nav>
+	<!-- 购物车模态框 -->
+	<div class="modal fade" id="shoppingCartModal" tabindex="-1" role="dialog" aria-labelledby="shoppingCartModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="shoppingCartModalLabel">购物车</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body" style="max-height: 600px; overflow-y: auto;">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>游戏</th>
+								<th>价格</th>
+								<th>数量</th>
+								<th>小计</th>
+								<th>选择</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="cartItems">
+							<!-- 购物车项将通过 JavaScript 动态添加到这里 -->
+						</tbody>
+					</table>
+					<div class="text-right">
+						<h5>商品数量：<span id="itemCount">0</span></h5>
+						<h5>总计：<span id="totalPrice">0</span></h5>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" id="selectAll">
+						<label class="form-check-label" for="selectAll">全选</label>
+					</div>
+
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">继续购物</button>
+					<button type="button" class="btn btn-danger" id="deleteSelected">删除选中商品</button>
+					<button type="button" class="btn btn-primary" id="checkout">结算</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- 登录模态框 -->
+	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<h5 class="modal-title" id="loginModalLabel">登录</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body text-center">
+					<img src="img/login_logo.png" alt="登录提示" width="300" height="300">
+					<form class="was-validated">
+						<div class="form-group">
+							<label for="username">用户名</label>
+							<input type="text" class="form-control" id="username" pattern="[A-Za-z0-9]{2,8}"
+								placeholder="请输入用户名" required="required">
+							<div class="invalid-feedback">用户名必须2位以上字母或数字</div>
+						</div>
+						<div class="form-group">
+							<label for="password">密码</label>
+							<input type="password" id="password" class="form-control" pattern="[A-Za-z0-9]{6,30}"
+								required="required" placeholder="请输入密码">
+							<div class="invalid-feedback">密码长度至少为六位,只能是大小写字母或数字</div>
+						</div>
+						<div class="form-group">
+							<label for="verificationCode">验证码</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="loginVerificationCode" placeholder="请输入验证码"
+									required="required" pattern="^\d{6}$">
+								<div class="input-group-append">
+									<button class="btn btn-outline-danger generate-code-btn" type="button"
+										id="loginGenerateCode">生成验证码</button>
+								</div>
+							</div>
+						</div>
+						<div class="form-group form-check">
+							<input type="checkbox" class="form-check-input" id="privacy" checked required="required">
+							<label class="form-check-label" for="privacy">我已阅读并同意隐私保护协议</label>
+							<div class="invalid-feedback">
+								你必须勾选此项
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary" id="Modal-login">登录</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 注册模态框 -->
+	<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="registerModalLabel">用户注册</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body text-center">
+					<form class="was-validated">
+						<div class="form-group">
+							<label for="username">用户名</label>
+							<input type="text" class="form-control" id="username" pattern="[A-Za-z0-9]{2,8}"
+								placeholder="请输入用户名" required="required">
+							<div class="invalid-feedback">用户名必须2位以上字母或数字</div>
+						</div>
+						<!-- 密码 -->
+						<div class="form-group">
+							<label for="password">密码</label>
+							<input type="password" class="form-control" pattern="[A-Za-z0-9]{6,30}" required="required"
+								placeholder="请输入密码" id="password">
+							<div class="invalid-feedback">密码长度至少为六位,只能是大小写字母或数字</div>
+						</div>
+						<div class="form-group">
+							<label for="confirmPassword">确认密码</label>
+							<input type="password" class="form-control" pattern="[A-Za-z0-9]{6,30}" id="confirmPassword"
+								placeholder="请确认密码" required="required">
+							<div class="invalid-feedback">密码长度至少为六位,只能是大小写字母或数字</div>
+						</div>
+						<!-- 手机 -->
+						<div class="form-group">
+							<label>手机号</label>
+							<input type="text" class="form-control" required="required" pattern="1[2-9]\d{9}$"
+								placeholder="请输入手机号码" id="mobileInput">
+							<div class="invalid-feedback">手机号只能是11位的数字！第二位是2-9之间的数</div>
+						</div>
+						<div class="form-group">
+							<label for="verificationCode">验证码</label>
+							<div class="input-group">
+								<input type="text" class="form-control" id="registerVerificationCode"
+									placeholder="请输入验证码" required="required" pattern="^\d{6}$">
+								<div class="input-group-append">
+									<button class="btn btn-outline-danger generate-code-btn" type="button"
+										id="registerGenerateCode">生成验证码</button>
+								</div>
+							</div>
+						</div>
+						<div class="form-group form-check">
+							<input type="checkbox" class="form-check-input" id="privacy" checked required="required">
+							<label class="form-check-label" for="privacy">我已阅读并同意隐私保护协议</label>
+							<div class="invalid-feedback">
+								你必须勾选此项
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="Modal-register">注册</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 游戏时光轮播图 -->
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="text-left">
+					<h2 class="sub-title">——————游戏</h2>
+					<h4 class="mt-4">游戏时光！</h4>
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-4">
+			<div class="col-lg-12 pb-5">
+				<div class="bd-example">
+					<div id="mycarousel">
+						<ol class="carousel-indicators">
+							<li></li>
+							<li></li>
+							<li></li>
+							<li></li>
+						</ol>
+						<div class="carousel-inner">
+							<div class="carousel-item active">
+								<img src="img/pubg-1.jpg" class="d-block w-100" alt="carousel1" />
+								<div class="carousel-caption d-none d-md-block text-warning">
+									<h5>绝地求生</h5>
+									<p>
+										历史总是在重演！
+									</p>
+								</div>
+							</div>
+							<div class="carousel-item">
+								<img src="img/ark.jpg" class="d-block w-100" alt="carousel2" />
+								<div class="carousel-caption d-none d-md-block">
+									<h5>方舟</h5>
+									<p>体验一下远古时期，与未来世界的科技与狠活</p>
+								</div>
+							</div>
+							<div class="carousel-item">
+								<img src="img/gujian3-1.jpg" class="d-block w-100" alt="carousel3" />
+								<div class="carousel-caption d-none d-md-block">
+									<h5>古剑奇谭3</h5>
+									<p>梦付千秋星垂野</p>
+								</div>
+							</div>
+							<div class="carousel-item">
+								<img src="img/xianjian7-1.jpg" class="d-block w-100" alt="carousel4" />
+								<div class="carousel-caption d-none d-md-block text-danger">
+									<h5>仙剑7</h5>
+									<p>剧情不行。</p>
+								</div>
+							</div>
+						</div>
+						<a class="carousel-control-prev" href="#mycarousel" role="button">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="sr-only">Previous</span>
+						</a>
+						<a class="carousel-control-next" href="#mycarousel" role="button">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="sr-only">Next</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 游戏卡片 -->
+	<div class="container-fluid ">
+		<h1 class="text-center text-danger">最喜欢的几个游戏！</h1>
+		<div class="alert alert-warning text-center">
+			<button class="close" data-dismiss="alert"><i class="iconfont icon-ziyuan"
+					style="font-size:30px;"></i></button>
+			<h3>点击游戏图片,鼠标滚轮可以缩放！</h3>
+		</div>
+		<div class="row my-5 ">
+			<div class="col-md-3 ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/apex.jpg" alt="apex" id="game-img-1">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">Apex Legends</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								Respawn Entertainment</span><br>
+							<span>发行商 </span>:<span class="text-primary">
+								Electronic Arts</span><br>
+							<span class="text-secondary ">￥<del>9.99</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">1.99</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/hydbk.jpg" alt="荒野大嫖客2">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">荒野大嫖客2</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								Rockstar Games</span><br>
+							<span>发行商</span>:<span class="text-primary">
+								Rockstar Games</span><br>
+							<span class="text-secondary ">￥<del>279</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">198</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart" data-game-name="荒野大嫖客2" data-game-price="10"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3  ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/srcx.jpg" alt="双人成行">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">双人成行</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								Hazelight</span><br>
+							<span>发行商</span>:<span class="text-primary">
+								Electronic Arts</span><br>
+							<span class="text-secondary ">￥<del>198</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">168</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/sbpc.jpg" alt="赛博朋克">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">赛博朋克</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								CD PROJEKT RED</span><br>
+							<span>发行商</span>:<span class="text-primary">
+								CD PROJEKT RED</span><br>
+							<span class="text-secondary ">￥<del>298</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">149</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row my-5 ">
+			<div class="col-md-3 ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/kong.jpg" alt="空洞骑士">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">空洞骑士</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">Team Cherry</span><br>
+							<span>发行商 </span>:<span class="text-primary">Team Cherry</span><br>
+							<span class="text-secondary ">￥<del>58</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">18</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/jihuang.jpg" alt="饥荒">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">饥荒联机版</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">Klei
+								Entertainment</span><br>
+							<span>发行商</span>:<span class="text-primary">Klei
+								Entertainment</span><br>
+							<span class="text-secondary ">￥<del>24</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">12</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3  ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/jingling.jpg" alt="精灵与萤火意志">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">精灵与萤火意志</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">Moon Studios GmbH</span><br>
+							<span>发行商</span>:<span class="text-primary">Xbox Game Studios</span><br>
+							<span class="text-secondary ">￥<del>90</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">29</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/great.jpg" alt="伟大的奇迹">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">伟大的奇迹</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">Caligari Games</span><br>
+							<span>发行商</span>:<span class="text-primary">Daedalic
+								Entertainment</span><br>
+							<span class="text-secondary ">￥<del>59</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">11.99</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row my-5 ">
+			<div class="col-md-3 ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/ws3.jpg" alt="巫师3:狂猎">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">巫师3:狂猎</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								CD PROJEKT RED</span><br>
+							<span>发行商 </span>:<span class="text-primary">
+								CD PROJEKT RED</span><br>
+							<span class="text-secondary ">￥<del>127</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">38.10</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/wzzd3.jpg" alt="无主之地3">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">无主之地3</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								Gearbox Software</span><br>
+							<span>发行商</span>:<span class="text-primary">
+								2K</span><br>
+							<span class="text-secondary ">￥<del>199</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">98</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3  ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/yong.jpg" alt="永劫无间">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">永劫无间</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								24 Entertainment</span><br>
+							<span>发行商</span>:<span class="text-primary">
+								NetEase Games Global</span><br>
+							<span class="text-secondary ">￥<del>98</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">56</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/zhi.jpg" alt="只狼">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">只狼</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								FromSoftware</span><br>
+							<span>发行商</span>:<span class="text-primary">Activision (Excluding Japan and Asia)</span><br>
+							<span class="text-secondary ">￥<del>268</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">65</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row my-5">
+			<div class="col-md-3 ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/GTA5.jpg" alt="给她爱5">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">给她爱5</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								Rockstar North</span><br>
+							<span>发行商 </span>:<span class="text-primary">
+								Rockstar Games</span><br>
+							<span class="text-secondary ">￥<del>179</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">66</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/Gujian3.jpg" alt="古剑奇谭3">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">古剑奇谭3</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								上海烛龙信息科技有限公司</span><br>
+							<span>发行商</span>:<span class="text-primary">
+								北京网元圣唐娱乐科技有限公司</span><br>
+							<span class="text-secondary ">￥<del>99</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">29</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3  ">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/xianjian7.jpg" alt="仙剑奇侠传7">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">仙剑奇侠传7</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								Softstar Technology (Beijing) Co., Ltd</span><br>
+							<span>发行商</span>:<span class="text-primary">
+								Softstar Technology (Beijing) Co., Ltd.</span><br>
+							<span class="text-secondary ">￥<del>128</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">78</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="card bg-game">
+					<img class="card-img-top" src="img/PUBG.jpg" alt="绝地求生">
+					<div class="card-body">
+						<h5 class="card-title text-center game-name">绝地求生</h5>
+						<div class="card-text text_p">
+							<span>开发商</span>:<span class="text-primary">
+								KRAFTON, Inc.</span><br>
+							<span>发行商</span>:<span class="text-primary">
+								KRAFTON, Inc.</span><br>
+							<span class="text-secondary ">￥<del>98</del></span>
+							<span class="text-danger">
+								<h3>￥<span class="game-price">9.99</span></h3>
+							</span>
+						</div>
+					</div>
+					<div class="card-footer">
+						<button type="button" class="btn-add-to-cart"><i
+								class="iconfont icon-gouwuche"></i>加入购物车</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 动态游戏添加 -->
+	<div id="gameContainer" class="container-fluid  py-5">
+		<h1 class="text-center text-danger">动态游戏添加功能</h1>
+		<div id="gameRow" class="row my-5">
+			<!-- 已有的游戏卡片 -->
+		</div>
+	</div>
+	<!-- 搜索结果 -->
+	<div id="searchResults-Container" class="container-fluid bg-info py-5">
+		<h1 class="text-center text-danger">搜索结果区</h1>
+		<div id="searchResults-Row" class="row">
+
+		</div>
+	</div>
+
+	<!-- 添加游戏模态框 -->
+	<div class="modal fade" id="addGameModal" tabindex="-1" aria-labelledby="addGameModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="addGameModalLabel">添加游戏</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="addGameForm">
+						<div class="mb-3">
+							<label for="gameName" class="form-label">游戏名称</label>
+							<input type="text" class="form-control" id="gameName" required>
+						</div>
+						<div class="mb-3">
+							<label for="developer" class="form-label">开发商</label>
+							<input type="text" class="form-control" id="developer" required>
+						</div>
+						<div class="mb-3">
+							<label for="publisher" class="form-label">发行商</label>
+							<input type="text" class="form-control" id="publisher" required>
+						</div>
+						<div class="mb-3">
+							<label for="price" class="form-label">价格</label>
+							<input type="text" class="form-control" id="price" required>
+						</div>
+						<div class="mb-3">
+							<label for="image" class="form-label">图片链接</label>
+							<input type="text" class="form-control" id="image" required>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="confirmAddBtn">添加</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 超大屏幕 -->
+	<div class="container">
+		<div class="jumbotron text-center ">
+			<h4>如果你也喜欢上述游戏！你可以加我的平台账号，和我一起游玩。</h4>
+			<h5 class="py-4">支持平台：</h5>
+			<h3>QQ:&nbsp;<span class="badge badge-pill badge-primary">2822576659</span></h3>
+			<h3>STEAM:&nbsp;<span class="badge badge-pill badge-dark">1013787052</span></h3>
+			<h3>EPIC:&nbsp;<span class="badge badge-pill badge-danger">ljgames09</span></h3>
+			<h3>ORIGIN:&nbsp;<span class="badge badge-pill badge-success">ljgames09</span></h3>
+			<h3>R星:&nbsp;<span class="badge badge-pill badge-warning">ljgames09</span></h3>
+		</div>
+	</div>
+	<!-- 建议 -->
+	<div class="container bg-white p-3">
+		<div class="row">
+			<div class="col-md text-center">
+				<h3>建议</h3>
+				<p class="font-italic">谢谢你的建议</p>
+			</div>
+		</div>
+		<div class="row py-3">
+			<div class="col-md-12">
+				<form action="" class="px-5 was-validated">
+					<div class="form-row ">
+						<div class="form-group col-md-6 ">
+							<label for="" class="sr-only">名字</label>
+							<input class="form-control text-sm-left bg-warning" type="text" name="" id=""
+								placeholder="名字" required="required">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="" class="sr-only">邮箱</label>
+							<input class="form-control  text-sm-left bg-warning" type="email" name="" id=""
+								placeholder="邮箱" required="required">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="" class="sr-only">建议内容</label>
+						<textarea class="form-control bg-warning" placeholder="建议内容" name="" id="" cols="10" rows="5"
+							required="required"></textarea>
+					</div>
+					<div class="form-group">
+						<button type="button" class="btn btn-primary float-right">发送</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- 页脚 -->
+	<footer class="footer text-danger bg-footer text-center">
+		<div class="container">
+			<p>
+				版权所有<i class="iconfont icon-banquan" style="font-size:20px;"></i>AdamLi
+				<a href="http://wpa.qq.com/msgrd?v=3&uin=2822576659&site=qq&menu=yes" target="_blank">
+					联系QQ：<i class="iconfont icon-QQ" style="font-size: 20px;"></i> </a> <br>
+				<a href="https://beian.miit.gov.cn/" target="_blank"><i class="iconfont icon-ICPbeian"
+						style="font-size:25px;"></i>鄂ICP备2022010411号-3</a>
+
+			</p>
+		</div>
+	</footer>
+	<div id="sakana-widget"></div>
+	<div id="aplayer"></div>
+</body>
+<script src="js/jquery-3.6.4.min.js"></script>
+<script src="js/bootstrap.bundle.js"></script>
+<script src="js/Modal-check.js"></script>
+<script src="js/Add-game.js"></script>
+<script src="js/shopcart.js"></script>
+<script src="js/MyCarousel.js"></script>
+<script src="js/Search.js"></script>
+<script src="js/Model-magnifier.js"></script>
+<script>
+	const ap = new APlayer({
+		container: document.getElementById('aplayer'),
+		fixed: true,
+		audio: [{
+			name: '他举起右手点名',
+			artist: '吴青峰',
+			url: './static/music-1.m4a',
+			cover: './static/wuqingfeng.jpg'
+		}]
+	});
+</script>
+
+</html>

@@ -1,0 +1,45 @@
+.left-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100px;
+}
+
+.left-navbar a {
+  margin-top: 100px;
+  display: block;
+  margin-bottom: 10px;
+  text-decoration: none;
+}
+
+@media (max-width: 1350px) {
+  .left-navbar {
+    display: none;
+  }
+}
+
+#nav .active a {
+  color: rgb(0, 123, 255);
+}
+
+#nav ul li:hover a {
+  color: rgb(0, 123, 255);
+  transition: .5s ease;
+}
+
+.card:hover {
+  transition: 0.5s;
+  background-color: rgb(128, 176, 228);
+  box-shadow: none !important;
+  transform: scale(1.1);
+  transition: all 1s;
+}
+
+.card:hover i,
+.card:hover h5,
+.card:hover p,
+.card:hover h6 {
+  transition: 0.5s;
+  color: rgb(255, 213, 0);
+}
